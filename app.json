@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "scheme": "acme",
+    "plugins": [
+      "expo-router"
+    ],
+    "name": "Golf Match Play",
+    "slug": "GolfMatchPlay",
+    "android": {
+      "package": "com.anonymous.GolfMatchPlay"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "6dd74825-3ef2-49da-83f4-eb3f17c25af8"
+      }
+    }
+  }
+}
