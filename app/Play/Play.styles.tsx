@@ -2,8 +2,8 @@ import { StyleSheet } from "react-native";
 
 const fSize = 20;
 const fSizeNumbs = 25;
-const backgroundColor = "#fff8e3";
-const butColor = "#e0d7ba";
+const backgroundColor = "white";
+const butColor = "#f2f2f2";
 const butBorderColor = "grey";
 
 const styles = StyleSheet.create({
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         
         flex: 1,
         maxWidth: "100%",
-        margin: 5,
         alignContent: "center",
     },
     row: {
@@ -89,18 +88,24 @@ const styles = StyleSheet.create({
         playerNames: {
             /* background colors???? */
         },
+        mp_: {
+            maxWidth: 100,
+            fontSize: 12,
+            backgroundColor: "purple",
+            
+        },
         /* --------------------------------------------- */
         cells: {
             flex: 1,
             /*width: 70,*/
             height: "100%",
-            fontWeight: "bold",
             textAlign: "center",
             textAlignVertical: "center",
             borderBottomWidth: 1,
             borderRightWidth: 1,
         },
         numHoleCell: {            
+            fontWeight: "bold",
             color: "white",
             fontSize: fSize,
             backgroundColor: "green",
@@ -109,8 +114,13 @@ const styles = StyleSheet.create({
         inputCell: {
             fontSize: fSizeNumbs,
             padding: 0,
-            color: "grey",
+            color: "#2e2e2e",
             borderColor: "#ccc",
+        },
+        mp_Cell: {
+            fontWeight: "bold",
+            borderColor: "#ccc",
+            color: "white",
         },
         /* --------------------------------------------- */
         total: {
@@ -136,29 +146,8 @@ const styles = StyleSheet.create({
             borderColor: "#ccc",
         },
         /* --------------------------------------------- */
-        mp_: {
-            width: 100,
-            maxWidth: 100,
-            height: "100%",
-            fontSize: 12,
-            color: "white",
-            textAlign: "center",
-            textAlignVertical: "center",
-            fontWeight: "bold",
-            backgroundColor: "purple",
-            
-        },
-        mp_Cell: {
-            flex: 1,
-            /*width: 70,*/
-            height: "100%",
-            textAlign: "center",
-            textAlignVertical: "center",
-            fontWeight: "bold",
-            borderRightWidth: 1,
-            borderColor: "#ccc",
-            color: "white",
-        },
+        
+        
         mp_Total: {
             width: 100,
             maxWidth: 100,
