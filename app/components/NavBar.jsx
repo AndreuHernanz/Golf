@@ -42,7 +42,10 @@ const styles = StyleSheet.create({
         borderColor: "black",
         alignItems: "center",
         backgroundColor: "white",
-        zIndex: 1000,
+        zIndex: 100,
+
+        shadowColor: "black",
+		elevation: 5, 
       },
     navBut: {
         justifyContent: "center",

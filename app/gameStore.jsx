@@ -23,7 +23,7 @@ const useGameStore = create(
         { courseName: "Roc 3 temp", holePars: Array(9).fill(3) },
         { courseName: "Montjuic temp", holePars: Array(18).fill(3) },
         { courseName: "Temp temp", holePars: Array(9).fill(3) },
-        { courseName: "Costa Daurada temp", holePars: [5,3,4,4,4,4,5,4,4] },
+        { courseName: "Costa Daurada temp", holePars: [5,3,5,4,4,4,4,4,4 , 3,5,3,4,4,5,4,3,4] },
         { courseName: "Sant Boi", holePars: Array(9).fill(3) },
         { courseName: "Caldes", holePars: [4,5,3,4,3,4,4,5,4] },
         { courseName: "Sant Pere de Ribes", holePars: Array(9).fill(3) },
