@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { router } from "expo-router";
 import useGameStore from "../gameStore";
 import NavBar from "../components/NavBar";
+import AddCourse from "../components/AddCourse";
 import * as ScreenOrientation from "expo-screen-orientation";
 
 export default function Main() {
@@ -64,45 +65,7 @@ return (
 	<NavBar page="Main" />
 
 
-	{addingCourse && 
-		<View style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", backgroundColor: "rgba(18, 54, 0, 0.79)", zIndex: 200, }}>
-			<View style={{ position: "absolute", top: "10%", left: "10%", width: "80%", height: "80%", backgroundColor: "white", borderRadius: 10, padding: 20 }}>
-				<Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Add a new course</Text>
-				<Text style={{ marginBottom: 10 }}>Course name:</Text>
-				<TextInput style={{ borderWidth: 1, borderColor: "black", borderRadius: 5, padding: 5, marginBottom: 10 }} />
-				<Text style={{ marginBottom: 10 }}>Hole pars (comma separated):</Text>
-				<TextInput style={{ borderWidth: 1, borderColor: "black", borderRadius: 5, padding: 5, marginBottom: 10 }} />
-				<View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-					<Pressable
-						onPress={() => setAddingCourse(false)}
-						style={({ pressed }) => [
-						{
-							transform: [{ scale: pressed ? 0.9 : 1 }],
-							opacity: pressed ? 0.7 : 1,
-						},
-						]}
-					>
-						<Text style={{ padding: 10, backgroundColor: "red", color: "white", borderRadius: 5 }}>Cancel</Text>
-					</Pressable>
-					<Pressable
-						onPress={() => {
-							addCourse({ courseName: "New Course", holePars: [3, 3, 3, 3, 3, 3, 3, 3, 3] });
-							setAddingCourse(false);
-						}
-						}
-						style={({ pressed }) => [
-						{
-							transform: [{ scale: pressed ? 0.9 : 1 }],
-							opacity: pressed ? 0.7 : 1,
-						},
-						]}
-					>
-						<Text style={{ padding: 10, backgroundColor: "green", color: "white", borderRadius: 5 }}>Add</Text>
-					</Pressable>
-				</View>
-			</View>		
-		</View>
-	}
+	{addingCourse && <AddCourse setAddingCourse={setAddingCourse} />}
 </View>
 );
 }

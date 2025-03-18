@@ -1,18 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
-import {
-  Text,
-  View,
-  Pressable,
-  Image,
-  TextInput,
-  BackHandler,
-} from "react-native";
+import { Text, View, Pressable, Image, TextInput, BackHandler} from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import useGameStore from "../gameStore";
-import styles, {
-  getUpDownCellStyle,
-  getResultBackgroundColor,
-} from "./Play.styles";
+import styles, { getUpDownCellStyle, getResultBackgroundColor} from "./Play.styles";
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 export default function Play() {
