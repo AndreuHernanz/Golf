@@ -2,17 +2,19 @@
   "expo": {
     "scheme": "acme",
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ],
     "name": "Golf Match Play",
     "slug": "GolfMatchPlay",
     "android": {
       "package": "com.anonymous.GolfMatchPlay",
       "adaptiveIcon": {
-          "foregroundImage": "./assets/ic_launcher_foreground.png",
-          "backgroundImage": "./assets/ic_launcher_background.png"
-      }
-    },    
+        "foregroundImage": "./assets/ic_launcher_foreground.png",
+        "backgroundImage": "./assets/ic_launcher_background.png"
+      },
+      "newArchEnabled": true
+    },
     "extra": {
       "router": {
         "origin": false

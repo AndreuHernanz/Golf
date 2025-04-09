@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import { router } from "expo-router";
-
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 
 
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         borderTopWidth: 1,
         borderColor: "black",
         alignItems: "center",
-        backgroundColor: "white",
+        backgroundColor: COLORS.primary,//"white",
         zIndex: 100,
 
         shadowColor: "black",
@@ -57,12 +57,12 @@ const styles = StyleSheet.create({
         opacity: 0.5,
     },
     navImage: {
-        tintColor : "black",
+        tintColor : "white",
         height: 40,
         width: 40
     },
     activeNavImage: {
-        tintColor: "green"
+        tintColor: COLORS.terciary
     }
   
 });

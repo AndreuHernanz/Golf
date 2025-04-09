@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, View, Pressable, ScrollView, Image } from "react-native";
+import { StyleSheet, Text, TextInput, View, Pressable, ScrollView, Image, Switch  } from "react-native";
 import useGameStore from "../gameStore";
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
+
 
 export default function AddCourse({setAddingCourse}) {
 
@@ -16,12 +18,16 @@ export default function AddCourse({setAddingCourse}) {
         setHoles(newHoles);
     }
 
+
+
+
 return (
 <View style={styles.container}>
     <View style={styles.containerBox}>
         <Text style={styles.title}>Add a new course</Text>
         <TextInput style={styles.nameTextInput} onChangeText={setCourseName} 
                     value={courseName} placeholder="Enter course name" />
+
         <View style={{ flexDirection: "row", justifyContent: "center", gap: 5 }}>
             <Text style={{textAlignVertical: "center"}}>Number of Holes:   </Text>
             <Pressable onPress={() => setNumberHoles(9)}
@@ -33,7 +39,8 @@ return (
                 <Text style={[styles.butNumHoles, holes.length==18 && styles.butNumHolesActive]}>18</Text>
             </Pressable>
         </View>
-        <Text style={styles.courseNameText}>Hole pars:</Text>
+        
+        <Text style={styles.courseNameText}>Holes par:</Text>
         <ScrollView vertical={true}>
         {holes.map((element, index) => (
         <View key={index} 
@@ -52,7 +59,7 @@ return (
                 style={({ pressed }) => pressed && styles.butPressed}>
                 <Text style={[styles.butParNum,holes[index] === 5 && styles.butParNumActive]}>5</Text>
             </Pressable>
-            <Text style={{textAlignVertical: "center", color: "white"}}>H{index + 1}</Text>
+            <Text style={{textAlignVertical: "center", color: COLORS.background}}>H{index + 1}</Text>
         </View>
         ))}
         </ScrollView>
@@ -63,11 +70,11 @@ return (
                     style={styles.butXImage} />
             </Pressable>
         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-            <Pressable onPress={() => { addCourse({ courseName: "New Course", holePars: holes });
+            <Pressable onPress={() => { addCourse({ courseName: courseName, holePars: holes });
                     setAddingCourse(false); }} //TODO
                 style={({ pressed }) => pressed && styles.butPressed}>
-                <Text style={{ padding: 10, backgroundColor: "green", color: "white", borderRadius: 30, 
-                    marginTop: 10, width: 200, textAlign: "center" }}>Add</Text>
+                <Text style={{ fontSize: 28, backgroundColor: COLORS.primary, color: "white", borderRadius: 30, 
+                    marginTop: 10, width: 200, textAlign: "center" }}>+</Text>
             </Pressable>
         </View>
     </View>		 
@@ -101,14 +108,14 @@ const styles = StyleSheet.create({
         position: "absolute", 
         top: 0, left: 0, 
         width: "100%", height: "100%", 
-        backgroundColor: "rgba(18, 54, 0, 0.79)", 
+        backgroundColor: "#005C53CC",//"rgba(18, 54, 0, 0.79)",
         zIndex: 200,
     },
     containerBox: {
         position: "absolute", 
         top: "5%", left: "10%", 
         width: "80%", height: "90%", 
-        backgroundColor: "white", 
+        backgroundColor: COLORS.background, 
         borderRadius: 10, 
         padding: 20
     },
@@ -137,7 +144,7 @@ const styles = StyleSheet.create({
         fontSize: 20
     },
     butNumHolesActive: {
-        backgroundColor: "green",
+        backgroundColor: COLORS.primary,
         color: "white"
     },
 
@@ -147,11 +154,13 @@ const styles = StyleSheet.create({
         textAlign: "center",
         textAlignVertical: "center", 
         backgroundColor: "#eeeeee", 
-        borderRadius: 5,
+
+        borderRadius: BORDER_RADIUS.small,
         fontSize: 25
     },
     butParNumActive: {
-        backgroundColor: "lightgreen"
+        backgroundColor: COLORS.primary,
+        color: COLORS.textLight
     }
 
 

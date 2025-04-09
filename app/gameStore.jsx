@@ -8,40 +8,43 @@ const useGameStore = create(
 
       // Current Game data
       currentCourse: "Default",
+      currentDate: new Date().toLocaleString(),
       nHoles: 9,
       players: [
-        { name: "ANDREU", scores: Array(18).fill(null) },
-        { name: "PAPA", scores: Array(18).fill(null) },
+        { name: "P1", scores: Array(18).fill(null) },
+        { name: "P2", scores: Array(18).fill(null) },
       ],
 
       // Saved courses (array of { name, holePars })
       courses: [
         { courseName: "Default Pitch and Putt", holePars: Array(18).fill(3) },
-        { courseName: "Can Cuyas", holePars: Array(18).fill(3) },
+        { courseName: "Can Cuyas", holePars: Array(9).fill(3) },
         { courseName: "Valles Golf, Terrassa", holePars: [4,3,5,5,3,4,3,4,4] },
-        { courseName: "Sant Cugat temp", holePars: Array(18).fill(3) },
-        { courseName: "Roc 3 temp", holePars: Array(9).fill(3) },
-        { courseName: "Montjuic temp", holePars: Array(18).fill(3) },
-        { courseName: "Temp temp", holePars: Array(9).fill(3) },
         { courseName: "Costa Daurada temp", holePars: [5,3,5,4,4,4,4,4,4 , 3,5,3,4,4,5,4,3,4] },
-        { courseName: "Sant Boi", holePars: Array(9).fill(3) },
         { courseName: "Caldes", holePars: [4,5,3,4,3,4,4,5,4] },
-        { courseName: "Sant Pere de Ribes", holePars: Array(9).fill(3) },
-        { courseName: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", holePars: Array(9).fill(3) },
       ],
 
       // Match history (array of completed games)
       matchHistory: [],
 
       setCurrentCourse: (currentCourse) => set({ currentCourse }),
+      setCurrentDate: () => set({ currentDate: new Date().toLocaleString() }),
       setNHoles: (nHoles) => set({ nHoles }),
       setPlayers: (players) => set({ players }),
 
-      resetGame: () => set({
+      resetGame: (pName1, pName2, nHoles) => set({
         players: [
-          { name: "ANDREU", scores: Array(18).fill(null) },
-          { name: "PAPA", scores: Array(18).fill(null) },
+          { name: pName1, scores: Array(nHoles).fill(null) },
+          { name: pName2, scores: Array(nHoles).fill(null) },
         ],
+        currentDate: new Date().toLocaleString([], { 
+          year: 'numeric', 
+          month: '2-digit', 
+          day: '2-digit', 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: false, // Set to true for AM/PM format
+        }),
       }),
 
       // === COURSE MANAGEMENT ===
@@ -49,15 +52,15 @@ const useGameStore = create(
         courses: [...state.courses, course]
       })),
       
-      removeCourse: (courseName) => set((state) => ({
-        courses: state.courses.filter(c => c.name !== courseName)
+      removeCourse: (_courseName) => set((state) => ({
+        courses: state.courses.filter(c => c.courseName !== _courseName)
       })),
       
 
       // === MATCH HISTORY ===
       saveMatch: ({ course, nHoles, players, matchPlayResult}) => {
         // MATCH PLAY RESULT will go for example from -5 to 0 to +5 (5DOWN in red or EVEN or 5UP in blue)
-        const date = new Date().toISOString();
+        const date = new Date().toLocaleString();
       
         const playerResults = players.map(player => ({
           name: player.name,

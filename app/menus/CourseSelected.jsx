@@ -7,58 +7,107 @@ import {
 	Image,
 	ScrollView,
 	BackHandler,
+	Alert,
 } from "react-native";
 import React, { useState, useEffect } from 'react';
 import { router } from "expo-router";
 import useGameStore from '../gameStore';
-import NavBar from "../components/NavBar";
+import * as ScreenOrientation from "expo-screen-orientation";
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
+
 
 export default function CourseSelected() {
 
-	const { resetGame, currentCourse, players, setPlayers } = useGameStore(); // ✅ Fetch updateNote from Zustand
+	const { resetGame, currentCourse, courses, removeCourse, players, setPlayers } = useGameStore(); // ✅ Fetch updateNote from Zustand
 
-	//const [title, setTitle] = useState('');
-	//const [content, setContent] = useState('');
-
-	// Load the note data when the component mounts
+	const [title, setTitle] = useState(courses.find(c => c.courseName === currentCourse).courseName);
+	const [coursePars, setCoursePars] = useState(courses.find(c => c.courseName === currentCourse).holePars);
+	
 	useEffect(() => {
-		
+		onEntry();
 	}, []);
+	
+	const onEntry = async () => {
+		await ScreenOrientation.lockAsync(
+		ScreenOrientation.OrientationLock.PORTRAIT_UP
+		);
+	};
 
-  	return (
-		<View style={{ flex: 1 }}>
-			<View style={styles.container}>
-				<View>
-					<Text style={styles.title}>MATCH PLAY GOLF</Text>
-				</View>
-				
-				<Pressable
-					onPress={resetGame}
-					style={({ pressed }) => [
-					{
-						transform: [{ scale: pressed ? 0.9 : 1 }],
-						opacity: pressed ? 0.7 : 1,
+	// Function to confirm deletion
+	const confirmDeleteCourse = () => {
+		Alert.alert(
+			"Delete Course",
+			"Are you sure you want to delete this course? \nThis action is irreversible",
+			[
+				{
+					text: "Cancel",
+					style: "cancel",
+				},
+				{
+					text: "Delete",
+					style: "destructive",
+					onPress: () => {
+						removeCourse(currentCourse); // Remove course from Zustand store
+						router.push("/"); // Navigate back after deletion
 					},
-					]}
-				>
-					<Text style={styles.buttonNewGame}>Start New Game</Text>
-				</Pressable>
-				<Pressable
-					onPress={() => {resetGame(), router.push("/Play/Play")}}
-					style={({ pressed }) => [
-					{
-						transform: [{ scale: pressed ? 0.9 : 1 }],
-						opacity: pressed ? 0.7 : 1,
-					},
-					]}
-				>
-					<Text style={styles.mainButs}>START ROUND</Text>
-				</Pressable>
-			</View>
-		
-			<NavBar page="Main" />
+				},
+			]
+		);
+	};
+
+return (
+<View style={{ flex: 1 }}>
+	<View style={styles.container}>
+		<View>
+			<Text style={styles.title}>MATCH PLAY GOLF</Text>
 		</View>
-  	);
+		<Pressable style={({ pressed }) =>[styles.imagePressable, {margin: 10}, pressed && styles.butPressed]} 
+			onPress={() => {router.push("/")}}>
+			<Image style={styles.image} source={require("../../assets/i_Back.png")} />
+		</Pressable>
+		<View style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, backgroundColor: COLORS.secondary, borderRadius: 10 }}>
+			<View style={{ padding: 10, flex: 1 }}>
+				<View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, maxWidth: "100%" }}>
+					<Text style={styles.courseName}>{title}</Text>
+					<Pressable style={({ pressed }) =>[styles.imagePressable, styles.imagePressableTrash, pressed && styles.butPressed]}	
+					onPress={confirmDeleteCourse}>
+						<Image style={styles.imageTrash} source={require("../../assets/i_Trash.png")} />
+					</Pressable>
+				</View>
+
+				<View style={{ marginBottom: 20, padding: 10, backgroundColor: COLORS.background, borderRadius: 10 }}>
+					<Text style={styles.coursePars}>
+						{coursePars.length} Holes - Par {coursePars.reduce((acc, par) => acc + par, 0)}</Text>
+					<Text></Text>
+					<Text style={styles.coursePars}>Holes Par:</Text>
+					<Text style={styles.coursePars}>{coursePars.join("   ")}</Text>
+				</View>
+
+				<View style={{ marginBottom: 10, padding: 10, backgroundColor: COLORS.background, borderRadius: 10, gap: 10 }}>
+					<Text style={[styles.coursePars]}>Players:</Text>
+					{players.map((player, index) => (
+						<TextInput
+							key={index}
+							style={[styles.playerInput, { backgroundColor: index % 2 === 0 ? "blue" : "red" }]}
+							value={player.name}
+							onChangeText={(text) => {
+								const newPlayers = [...players];
+								newPlayers[index].name = text;
+								setPlayers(newPlayers);
+							}}
+						/>
+					))}
+				</View>
+			</View>
+			<Pressable onPress={() => {resetGame(players[0].name, players[1].name, coursePars.length), router.push("/Play/Play")}}
+				style={({ pressed }) => [{transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,	},]}>
+				<Text style={styles.mainButs}>START ROUND</Text>
+			</Pressable>
+		</View>
+	</View>
+
+</View>
+);
 }
 
 const styles = StyleSheet.create({
@@ -67,15 +116,38 @@ const styles = StyleSheet.create({
 		/*opacity: 0.5,*/
 	},
 
+	imagePressable: {
+		padding: 5,
+		backgroundColor: COLORS.terciary,
+		borderWidth: 1,
+		borderColor: "gray",
+		borderRadius: 10,
+	},
+	image: {
+		height: 60,
+		width: 60,
+		tintColor: "black",
+	},
+	imageTrash:{
+		height: 40,
+		width: 40,
+		tintColor: "black",
+	},
+	imagePressableTrash: {
+		borderColor: "black",
+		backgroundColor: "grey",
+	},
+
 	container: {
 		flex: 1,
 		height: "100%",
 		flexDirection: "column",
 		justifyContent: "space-between",
-		backgroundColor: "white",
+		backgroundColor:COLORS.background,
 	},
 	title:{
-		backgroundColor: "#eeeeee",
+		color: COLORS.textLight,
+		backgroundColor: COLORS.primary,
 		padding: 10,
 		fontSize: 30,
 		fontWeight: "bold",
@@ -88,9 +160,9 @@ const styles = StyleSheet.create({
 		margin: 10,
 		height: 100,
 		borderRadius: 10,
-		backgroundColor: "green",
+		backgroundColor: COLORS.primary,
 		borderWidth: 5,
-		borderColor: "darkgreen",
+		borderColor: COLORS.text,
 	},
 	buttonNewGame: {
 		padding: 10,
@@ -104,30 +176,30 @@ const styles = StyleSheet.create({
 
 
 
-	courseContainer: {
-		backgroundColor: "darkgreen",
-		borderWidth: 1,
-		borderColor: "white",
-		borderRadius: 10,
-		marginHorizontal: 20,
-		marginVertical: 10,
-		padding: 20,
-	},
+	
 	courseName: {
-		maxHeight: 18,
-		color: "white",
+		fontSize: 30,
+		color: COLORS.text,
 		fontWeight: "bold",
-		flexWrap: "wrap",
-		overflow: "hidden",
 		marginBottom: 10,
-		textDecorationLine: "underline",
+		flexWrap: "wrap", // Allows text to wrap
+		maxWidth: "80%",
 	},
 	coursePars: {
+		fontSize: 20,
+		color: COLORS.text,
+	},
+
+
+	playerInput: {
+		height: 70,
 		color: "white",
-		maxHeight: 36,
-		flexWrap: "wrap",
-		overflow: "hidden",
-		textOverflow: "ellipsis",
-		display: "-webkit-box",
+		fontSize: 20,
+		fontWeight: "bold",
+		textAlign: "center",
+		borderWidth: 1,
+		borderColor: COLORS.border,
+		borderRadius: 10,
+		padding: 5,
 	},
 });

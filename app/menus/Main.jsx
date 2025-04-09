@@ -5,6 +5,9 @@ import useGameStore from "../gameStore";
 import NavBar from "../components/NavBar";
 import AddCourse from "../components/AddCourse";
 import * as ScreenOrientation from "expo-screen-orientation";
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
+import { LinearGradient } from 'expo-linear-gradient';
+
 
 export default function Main() {
 	const { courses, setCurrentCourse, addCourse } = useGameStore();
@@ -31,28 +34,30 @@ return (
 		<View>
 			<Text style={styles.title}>MATCH PLAY GOLF</Text>
 		</View>
+
+		
+
 		<FlatList
 			data={courses}
 			keyExtractor={(course) => course.courseName}
 			renderItem={({ item: course }) => (
-				<Pressable onPress={() => {setCurrentCourse(course.courseName), router.push(`/menus/CourseSelected`)}} 
-						style={({ pressed }) => [styles.courseContainer, pressed && styles.butPressed]}>
-
-					<Text style={styles.courseName}>{course.courseName}</Text>
-					<Text style={styles.coursePars}>{course.holePars.join(", ")}</Text>
-				</Pressable>
+				
+				 <Pressable onPress={() => {setCurrentCourse(course.courseName), router.push(`/menus/CourseSelected`)}} 
+				 		style={({ pressed }) => [styles.courseContainer, pressed && styles.butPressed]}>
+					<LinearGradient	colors={COLORS.backgroundGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+						style={styles.gradient}
+						>
+						<Text style={styles.courseName}>{course.courseName}</Text>
+						<Text style={styles.coursePars}>{course.holePars.join(", ")}</Text>
+					</LinearGradient>
+				 </Pressable>
+				
 			)}
 		/>
-		<Pressable
-			onPress={() => router.push("/Play/Play")}
-			style={({ pressed }) => [
-			{
-				transform: [{ scale: pressed ? 0.9 : 1 }],
-				opacity: pressed ? 0.7 : 1,
-			},
-			]}
-		>
-			<Text style={styles.mainButs}>CONTINUE</Text>
+		<Pressable onPress={() => router.push("/Play/Play")}
+			style={({ pressed }) => [{ transform: [{ scale: pressed ? 1.1 : 1,}], 
+			opacity: pressed ? 1 : 1}, ]}>
+			<Text style={styles.mainButs}>CONTINUE ROUND</Text>
 		</Pressable>
 	</View>
 
@@ -81,23 +86,24 @@ const styles = StyleSheet.create({
 		height: "100%",
 		flexDirection: "column",
 		justifyContent: "space-between",
-		backgroundColor: "white",
+		backgroundColor: COLORS.background,
 	},
 	title:{
-		backgroundColor: "#eeeeee",
+		color: COLORS.textLight,
+		backgroundColor: COLORS.primary,
 		padding: 10,
 		fontSize: 30,
 		fontWeight: "bold",
 	},
 	mainButs: {
-		color: "darkgreen",
+		color: COLORS.text,
 		fontSize: 30,
 		textAlign: "center",
 		textAlignVertical: "center",
 		/*margin: 10,*/
 		height: 100,
 		//borderRadius: 10,
-		backgroundColor: "lightgreen",
+		backgroundColor: COLORS.secondary,
 		//borderWidth: 5,
 		borderColor: "darkgreen",
 		borderTopWidth: 1,
@@ -105,32 +111,26 @@ const styles = StyleSheet.create({
 		shadowColor: "black",
 		elevation: 5, 
 	},
-	buttonNewGame: {
-		padding: 10,
-		margin: 10,
-		backgroundColor: "orange",
-		alignItems: "center",
-		color: "white",
-		fontWeight: "bold",
-		fontSize: 18,
-	},
 
 
 
 	courseContainer: {
-		backgroundColor: "darkgreen",
+		backgroundColor: COLORS.primary,//COLORS.primary,
 		borderWidth: 1,
 		borderColor: "black",
-		borderRadius: 10,
+		borderRadius: BORDER_RADIUS.small,
 		marginHorizontal: 20,
 		marginVertical: 10,
-		padding: 20,
-
+		
 		shadowColor: "black",
 		elevation: 5, 
 	},
+	gradient: {
+		borderRadius: BORDER_RADIUS.small,
+		padding: 20,
+	},
 	courseName: {
-		color: "white",
+		color: COLORS.textLight,
 		fontWeight: "bold",
 		fontSize: 25,
 		flexWrap: "wrap",
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
 		textDecorationLine: "underline",
 	},
 	coursePars: {
-		color: "white",
+		color: COLORS.textLight,
 		maxHeight: 36,
 		flexWrap: "wrap",
 		overflow: "hidden",
@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		bottom: 200,
 		right: 0,
-		backgroundColor: "lightgreen",
+		backgroundColor: COLORS.terciary,
 		alignItems: "center",
 		justifyContent: "center",
 		borderRadius: 40,
@@ -164,5 +164,10 @@ const styles = StyleSheet.create({
 		
 		shadowColor: "black",
 		elevation: 5, 
-	}
+	},
+
+
+
+
+	
 });

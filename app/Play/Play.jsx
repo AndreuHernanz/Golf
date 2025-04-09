@@ -2,16 +2,22 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Text, View, Pressable, Image, TextInput, BackHandler} from "react-native";
 import { router, useFocusEffect } from "expo-router";
 import useGameStore from "../gameStore";
-import styles, { getUpDownCellStyle, getResultBackgroundColor} from "./Play.styles";
+import styles, { getInputCellStyle, getUpDownCellStyle, getResultBackgroundColor} from "./Play.styles";
 import * as ScreenOrientation from 'expo-screen-orientation';
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 export default function Play() {
-    const { nHoles, setNHoles, players, setPlayers } = useGameStore();
-    const [upAndDownInd, setUpAndDownInd] = useState(Array(nHoles).fill(null));
-    const [upAndDownAdd, setUpAndDownAdd] = useState(Array(nHoles).fill(null));
+    const { nHoles, setNHoles, players, setPlayers, currentCourse, courses, currentDate } = useGameStore();
+    const [gameCourse, setGameCourse] = useState(courses.find(c => c.courseName === currentCourse));
+    //setNHoles(gameCourse.holePars.length);
+    const [upAndDownInd, setUpAndDownInd] = useState(Array(gameCourse.holePars.length).fill(null));
+    const [upAndDownAdd, setUpAndDownAdd] = useState(Array(gameCourse.holePars.length).fill(null));
+
+    const [saveBool, setSaveBool] = useState(false);
 
     useEffect(() => {
         onEntry();
+        setNHoles(gameCourse.holePars.length);
         handleMatchPlay(players);
     }, []);
 
@@ -36,14 +42,14 @@ export default function Play() {
         await ScreenOrientation.unlockAsync();
     };
 
-    const handleMatchPlay = (newPlayers, newNHoles = nHoles) => {
+    const handleMatchPlay = (newPlayers) => {
         //console.log("handleMatchPlay", newPlayers, newNHoles);
         let individualUpAndDown = [];
         //const newupAndDown = [...upAndDownAdd];
-        let newupAndDown = Array(newNHoles).fill(null);
+        let newupAndDown = Array(gameCourse.holePars.length).fill(null);
 
         let count = 0;
-        for (let i = 0; i < newNHoles; i++) {
+        for (let i = 0; i < gameCourse.holePars.length; i++) {
             if (newPlayers[0].scores[i] === null || newPlayers[1].scores[i] === null) {
                 individualUpAndDown.push(null);
             } 
@@ -72,11 +78,16 @@ export default function Play() {
     };
 
     const calculateTotal = (scores) => {
-        let total = 0;
-        for (let i = 0; i < nHoles; i++) {
-            total += scores[i]; // You can also check for NaN if needed
-        }
-        return total;
+        return scores.reduce((total, score) => total + (score ?? 0), 0);
+    };
+
+    const calculateStrokeDifference = () => {
+        console.log("calculateStrokeDifference", players[0].scores, players[1].scores);
+        return calculateTotal(players[0].scores) - calculateTotal(players[1].scores);
+    };
+
+    const totalPar = () => {
+        return gameCourse.holePars.reduce((total, par) => total + par, 0);
     };
 
     const upAndDownTotal = () => {
@@ -99,18 +110,9 @@ return (
 <View style={styles.container}>
 
     {/* BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS */}
-    <Pressable onPress={() => {onLeave(), router.back()}}
-        style={({ pressed }) => [ styles.imagePressable,
-        { transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,},
-        ]}
-    >
-        <Image
-        source={require("../../assets/i_Back.png")}
-        style={styles.image}
-        />
-    </Pressable>
+    
 
-    <View style={styles.nHolesButs}>
+    {/* <View style={styles.nHolesButs}>
         <Pressable onPress={() => { setNHoles(9), handleMatchPlay(players, 9); }}
             style={({ pressed }) => [
                 {transform: [{ scale: pressed ? 0.9 : 1 }],
@@ -126,12 +128,36 @@ return (
             ]}>
             <Text style={styles.nHolesButsText}>18 Holes</Text>
         </Pressable>
+    </View> */}
+    
+    
+    <View style={{ flexDirection: "row", justifyContent: "space-between", maxHeight: 60, }}>
+        <Pressable onPress={() => {onLeave(), router.push("/")}}
+            style={({ pressed }) => [ styles.imagePressable,
+            { transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,},]}>
+            <Image source={require("../../assets/i_Back.png")} style={styles.image} />
+        </Pressable>
+        <View style={{flex: 1, justifyContent: "center"}}>
+            <Text>{currentCourse} - Round</Text>
+            <Text style={{color: "grey", fontSize: 10}}>{currentDate}</Text>
+        </View>
+        <Text style={styles.title}>GOLF MATCH PLAY</Text>
+        <View style={{flex: 1, flexDirection: "row", gap: 10, justifyContent: "flex-end"}}>
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.holeOne}}>Hole in One</Text>
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.eagle}}>Eagle</Text>
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.birdie}}>Birdie</Text>
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.par}}>Par{/* skyblue turquoise */}</Text> 
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.bogey}}>Bogey</Text>
+        </View>
+        <Pressable onPress={() => {setSaveBool(true)}}
+            style={({ pressed }) => [ styles.imagePressable,
+            { transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,},]}>
+            <Image source={require("../../assets/i_Notes.png")} 
+            style={[styles.image, saveBool && styles.imageSaveActive]} />
+        </Pressable>
     </View>
     
     {/* TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE TABLE */}
-    <Text style={styles.title}>GOLF MATCH PLAY</Text>
-    
-    
     <View style={styles.table}>
 
         <View style={styles.row}>
@@ -144,15 +170,16 @@ return (
             <Text style={[styles.headerTotal, styles.total]}>Total</Text>
         </View>
 
+
         <View style={styles.row}>
             <Text style={[styles.holesRow, styles.infoCell]}>Par</Text>
-            {upAndDownAdd.map((score, indx) => (
+            {gameCourse.holePars.map((holePar, indx) => (
                 <Text key={indx} style={[styles.numHoleCell, styles.cells]}>
-                    {indx.toString() }
+                    {holePar.toString() }
                 </Text>
             ))}
-            <Text style={[styles.total]} >
-                72
+            <Text style={[styles.total, styles.headerTotal]} >
+                {totalPar()}
             </Text>
         </View>
 
@@ -168,7 +195,7 @@ return (
                     return (
                         <TextInput
                             key={holeIndex}
-                            style={[styles.inputCell, styles.cells]}
+                            style={[styles.inputCell, styles.cells, getInputCellStyle(score, gameCourse.holePars[holeIndex]) ]}
                             keyboardType="numeric"
                             value={score ? score.toString() : ""}
                             maxLength={2}
@@ -199,14 +226,15 @@ return (
         </View>
 
     </View>
-    <Text
-        style={[ styles.resume,
-            { backgroundColor: getResultBackgroundColor(upAndDownTotal()) }, ]}
-        >
-        {upAndDownTotal() === 0 ? "" : upAndDownTotal() > 0
-            ? "ANDREU WINS" : "PAPA WINS"}{" "}
-        {resultToText(upAndDownTotal())}
-    </Text>
+    <Text style={[styles.resume, 
+        { backgroundColor: getResultBackgroundColor(upAndDownTotal() === 0 
+            ? calculateStrokeDifference()*-1 : upAndDownTotal()) }]}>
+    {upAndDownTotal() === 0 
+        ? (calculateStrokeDifference() !== 0 
+            ? `${players[calculateStrokeDifference() < 0 ? 0 : 1].name} WINS by ${Math.abs(calculateStrokeDifference())} stroke${Math.abs(calculateStrokeDifference()) > 1 ? "s" : ""}`
+            : "EVEN")
+        : `${players[upAndDownTotal() > 0 ? 0 : 1].name} WINS ${resultToText(upAndDownTotal())}`}
+</Text>
     
 </View>
 );

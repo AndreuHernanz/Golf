@@ -6,6 +6,8 @@ const backgroundColor = "white";
 const butColor = "#f2f2f2";
 const butBorderColor = "grey";
 
+import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -13,6 +15,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
         imagePressable: {
+            margin: 10,
+        },
+        imagePressableDeprecated: {
             position: "absolute",
             top: 0,
             left: 0,
@@ -26,6 +31,12 @@ const styles = StyleSheet.create({
             borderWidth: 1,
             borderColor: butBorderColor,
             tintColor: "black",
+            borderRadius: BORDER_RADIUS.small,
+        },
+        imageSaveActive: {
+            borderColor: COLORS.primary,
+            backgroundColor: COLORS.secondary,
+            tintColor: COLORS.primary,
         },
         /* ---------------------------- */
         nHolesButs: {
@@ -48,6 +59,7 @@ const styles = StyleSheet.create({
             borderColor: butBorderColor,
         },
     title: {
+        color: COLORS.text,
         fontSize: 24,
         fontWeight: "bold",
         textAlign: "center",
@@ -79,8 +91,8 @@ const styles = StyleSheet.create({
             fontWeight: "bold",
         },
         holesRow: {
-            backgroundColor: "green",
-            borderColor: "darkgreen",
+            backgroundColor: COLORS.primary,
+            borderColor: COLORS.primaryB,
             borderBottomWidth: 1,
             borderRightWidth: 1,
             borderLeftWidth: 1,
@@ -106,15 +118,15 @@ const styles = StyleSheet.create({
         },
         numHoleCell: {            
             fontWeight: "bold",
-            color: "white",
+            color: COLORS.textLight,
             fontSize: fSize,
-            backgroundColor: "green",
-            borderColor: "darkgreen",
+            backgroundColor: COLORS.primary,
+            borderColor: COLORS.primaryB,
         },
         inputCell: {
             fontSize: fSizeNumbs,
             padding: 0,
-            color: "#2e2e2e",
+            color: COLORS.text,
             borderColor: "#ccc",
         },
         mp_Cell: {
@@ -136,8 +148,8 @@ const styles = StyleSheet.create({
         },
         headerTotal: {
             color: "white",
-            backgroundColor: "green",
-            borderColor: "darkgreen",
+            backgroundColor: COLORS.primary,
+            borderColor: COLORS.primaryB,
         },
         playerTotal: {
             fontSize: fSizeNumbs,
@@ -174,6 +186,22 @@ export const getUpDownCellStyle = (score) => ({
   backgroundColor: score === null ? "grey" : score === 0 ? "#333333" : score > 0 ? "blue" : "red",
   borderColor: score === null ? "#666666" : score === 0 ? "#1f1f1f" : score > 0 ? "darkblue" : "darkred",
 });
+
+export const getInputCellStyle = (score, par) => {
+
+    if (score === 1) 
+        return { backgroundColor: COLORS.holeOne }
+    if (score === par - 3) 
+        return { backgroundColor: COLORS.eagle }
+    if (score === par - 2) 
+        return { backgroundColor: COLORS.eagle }
+    if (score === par - 1) 
+        return { backgroundColor: COLORS.birdie }
+    if (score === par) 
+        return { backgroundColor: COLORS.par }
+    if (score === par + 1) 
+        return { backgroundColor: COLORS.bogey }
+};
 
 export const getResultBackgroundColor = (total) => (total === 0 ? "#333333" : total > 0 ? "blue" : "red");
 
