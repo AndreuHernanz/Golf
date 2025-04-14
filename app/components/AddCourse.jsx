@@ -117,7 +117,11 @@ const styles = StyleSheet.create({
         width: "80%", height: "90%", 
         backgroundColor: COLORS.background, 
         borderRadius: 10, 
-        padding: 20
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 10,
+        paddingBottom: 20,
+
     },
     title:{
         fontSize: 20, 
@@ -128,6 +132,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     nameTextInput: {
+        fontSize: 20,
         borderWidth: 1, 
         borderColor: "black", 
         borderRadius: 5, 

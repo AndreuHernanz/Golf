@@ -7,7 +7,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 export default function Play() {
-    const { nHoles, setNHoles, players, setPlayers, currentCourse, courses, currentDate } = useGameStore();
+    const { nHoles, setNHoles, players, setPlayers, currentCourse, courses, currentDate, currentTime, saveMatch } = useGameStore();
     const [gameCourse, setGameCourse] = useState(courses.find(c => c.courseName === currentCourse));
     //setNHoles(gameCourse.holePars.length);
     const [upAndDownInd, setUpAndDownInd] = useState(Array(gameCourse.holePars.length).fill(null));
@@ -82,7 +82,7 @@ export default function Play() {
     };
 
     const calculateStrokeDifference = () => {
-        console.log("calculateStrokeDifference", players[0].scores, players[1].scores);
+        //console.log("calculateStrokeDifference", players[0].scores, players[1].scores);
         return calculateTotal(players[0].scores) - calculateTotal(players[1].scores);
     };
 
@@ -146,13 +146,13 @@ return (
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.holeOne}}>Hole in One</Text>
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.eagle}}>Eagle</Text>
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.birdie}}>Birdie</Text>
-            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.par}}>Par{/* skyblue turquoise */}</Text> 
+            <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.par}}>Par</Text> 
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.bogey}}>Bogey</Text>
         </View>
-        <Pressable onPress={() => {setSaveBool(true)}}
+        <Pressable onPress={()=>{ setSaveBool(true), saveMatch(currentCourse,players,upAndDownTotal(),gameCourse.holePars,currentTime)}}
             style={({ pressed }) => [ styles.imagePressable,
             { transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,},]}>
-            <Image source={require("../../assets/i_Notes.png")} 
+            <Image source={require("../../assets/i_Save.png")} 
             style={[styles.image, saveBool && styles.imageSaveActive]} />
         </Pressable>
     </View>

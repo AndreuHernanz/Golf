@@ -24,7 +24,7 @@ export default function NavBar({page}) {
             style={({ pressed }) => [styles.navBut, pressed && styles.butPressed]}
             >
             <Image 
-              source={require('../../assets/i_Notes.png')}
+              source={require('../../assets/i_History.png')}
               style={[styles.navImage, page === 'History' && styles.activeNavImage]}
             />
           </Pressable>   

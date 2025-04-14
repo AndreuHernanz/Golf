@@ -14,14 +14,16 @@ import { router } from "expo-router";
 import useGameStore from '../gameStore';
 import * as ScreenOrientation from "expo-screen-orientation";
 import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
+import { useLocalSearchParams } from 'expo-router';
 
 
 export default function CourseSelected() {
 
-	const { resetGame, currentCourse, courses, removeCourse, players, setPlayers } = useGameStore(); // ✅ Fetch updateNote from Zustand
+	const { courseName } = useLocalSearchParams(); // ✅ Fetch courseName from URL params
+	const { resetGame, setCurrentCourse, courses, removeCourse, players, setPlayers } = useGameStore(); // ✅ Fetch updateNote from Zustand
 
-	const [title, setTitle] = useState(courses.find(c => c.courseName === currentCourse).courseName);
-	const [coursePars, setCoursePars] = useState(courses.find(c => c.courseName === currentCourse).holePars);
+	const [title, setTitle] = useState( courseName ) //useState(courses.find(c => c.courseName === currentCourse).courseName);
+	const [coursePars, setCoursePars] = useState(courses.find(c => c.courseName === courseName).holePars);
 	
 	useEffect(() => {
 		onEntry();
@@ -47,7 +49,7 @@ export default function CourseSelected() {
 					text: "Delete",
 					style: "destructive",
 					onPress: () => {
-						removeCourse(currentCourse); // Remove course from Zustand store
+						removeCourse(courseName); // Remove course from Zustand store
 						router.push("/"); // Navigate back after deletion
 					},
 				},
@@ -61,13 +63,16 @@ return (
 		<View>
 			<Text style={styles.title}>MATCH PLAY GOLF</Text>
 		</View>
-		<Pressable style={({ pressed }) =>[styles.imagePressable, {margin: 10}, pressed && styles.butPressed]} 
-			onPress={() => {router.push("/")}}>
-			<Image style={styles.image} source={require("../../assets/i_Back.png")} />
-		</Pressable>
-		<View style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, backgroundColor: COLORS.secondary, borderRadius: 10 }}>
-			<View style={{ padding: 10, flex: 1 }}>
-				<View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 10, maxWidth: "100%" }}>
+		<View style={{flexDirection: "row" ,justifyContent: "left", alignItems: "center" }}>
+			<Pressable style={({ pressed }) =>[styles.imagePressable, {margin: 10}, pressed && styles.butPressed]} 
+				onPress={() => {router.push("/")}}>
+				<Image style={styles.image} source={require("../../assets/i_Back.png")} />
+			</Pressable>
+		</View>
+		<View style={{ flex: 1, marginHorizontal: 10, marginBottom: 10, 
+			backgroundColor: COLORS.secondary, borderRadius: 10, justifyContent: "space-between" }}>
+			<View style={{ padding: 10 }}>
+				<View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 10, maxWidth: "100%" }}>
 					<Text style={styles.courseName}>{title}</Text>
 					<Pressable style={({ pressed }) =>[styles.imagePressable, styles.imagePressableTrash, pressed && styles.butPressed]}	
 					onPress={confirmDeleteCourse}>
@@ -99,7 +104,7 @@ return (
 					))}
 				</View>
 			</View>
-			<Pressable onPress={() => {resetGame(players[0].name, players[1].name, coursePars.length), router.push("/Play/Play")}}
+			<Pressable onPress={() => {setCurrentCourse(courseName), resetGame(players[0].name, players[1].name, coursePars.length), router.push("/Play/Play")}}
 				style={({ pressed }) => [{transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,	},]}>
 				<Text style={styles.mainButs}>START ROUND</Text>
 			</Pressable>
@@ -124,18 +129,19 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 	},
 	image: {
-		height: 60,
-		width: 60,
+		height: 40,
+		width: 40,
 		tintColor: "black",
 	},
 	imageTrash:{
 		height: 40,
 		width: 40,
-		tintColor: "black",
+		tintColor: "white",
 	},
 	imagePressableTrash: {
-		borderColor: "black",
-		backgroundColor: "grey",
+		borderColor: "darkred",
+		backgroundColor: "red",
+		borderWidth: 2,
 	},
 
 	container: {

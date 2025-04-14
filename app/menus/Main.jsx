@@ -34,23 +34,20 @@ return (
 		<View>
 			<Text style={styles.title}>MATCH PLAY GOLF</Text>
 		</View>
-
-		
-
 		<FlatList
 			data={courses}
 			keyExtractor={(course) => course.courseName}
 			renderItem={({ item: course }) => (
 				
-				 <Pressable onPress={() => {setCurrentCourse(course.courseName), router.push(`/menus/CourseSelected`)}} 
-				 		style={({ pressed }) => [styles.courseContainer, pressed && styles.butPressed]}>
-					<LinearGradient	colors={COLORS.backgroundGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
-						style={styles.gradient}
-						>
-						<Text style={styles.courseName}>{course.courseName}</Text>
-						<Text style={styles.coursePars}>{course.holePars.join(", ")}</Text>
-					</LinearGradient>
-				 </Pressable>
+				<Pressable onPress={()=>{router.push({pathname: '/menus/CourseSelected',params: { courseName: course.courseName },});}} 
+					style={({ pressed }) => [styles.courseContainer, pressed && styles.butPressed]}>
+				<LinearGradient	colors={COLORS.backgroundGradient} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }}
+					style={styles.gradient}
+					>
+					<Text style={styles.courseName}>{course.courseName}</Text>
+					<Text style={styles.coursePars}>{course.holePars.join(", ")}</Text>
+				</LinearGradient>
+				</Pressable>
 				
 			)}
 		/>
