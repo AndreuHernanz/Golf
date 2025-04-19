@@ -8,30 +8,32 @@ import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 
 export default function History() {
-  const { matchHistory } = useGameStore();
+    const { matchHistory } = useGameStore();
 
-  const formatTimestamp = (timestamp) => {
-    if (!timestamp) return '';
-  
-    const date = new Date(timestamp);
-    if (isNaN(date.getTime())) return 'Invalid';
-  
-    const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'short' }); // e.g. "Apr"
-  
-    return `${day} ${month}`;
-  };
+    const formatTimestamp = (timestamp) => {
+        if (!timestamp) return '';
+
+        if (typeof timestamp != Date) return '';
+    
+        const day = timestamp.getDate();
+        const month = timestamp.toLocaleString('default', { month: 'short' }); // e.g. "Apr"
+    
+        return `${day} ${month}`;
+    };
   
 
 const renderItem = ({ item }) => {
 
-    
+    const sumPars = item.holePars.reduce((sum, par) => sum + (par ?? 0), 0);
 
     return (
     <View style={styles.card}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={styles.title}>{item.course} - {item.nHoles} Holes</Text>
-            <Text style={styles.date}>{formatTimestamp(item.time)}</Text>
+            <View style={{flexDirection: 'row', gap: 10}}>
+                <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">{item.course}</Text>
+                <Text style={styles.info}>{item.nHoles} Holes - Par {sumPars}</Text>
+            </View>
+            <Text style={styles.date}>{formatTimestamp(item.date)}</Text>
         </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -128,9 +130,16 @@ const styles = StyleSheet.create({
     title: {
         fontSize: FONT_SIZES.large,
         fontWeight: '600',
+        textAlignVertical: 'top',
+        maxWidth: 200,
+    },
+    info: {
+        fontSize: FONT_SIZES.medium,
+        color: '#888',
+        textAlignVertical: 'auto'
     },
     date: {
-        fontSize: FONT_SIZES.small,
+        fontSize: FONT_SIZES.large,
         color: '#555',
         marginBottom: 4,
     },

@@ -7,8 +7,8 @@ const useGameStore = create( persist(
 
         // Current Game data
         currentCourse: "Default",
-        currentDate: new Date().toLocaleString(),
-        currentTime: new Date().getTime(),
+        currentDateString: new Date(),
+        currentDate: new Date(),
         nHoles: 9,
         players: [
             { name: "P1", scores: Array(18).fill(null) },
@@ -24,11 +24,9 @@ const useGameStore = create( persist(
             { courseName: "Caldes", holePars: [4,5,3,4,3,4,4,5,4] },
         ],
 
-        // Match history (array of completed games)
         matchHistory: [],
 
         setCurrentCourse: (currentCourse) => set({ currentCourse }),
-        setCurrentDate: () => set({ currentDate: new Date().toLocaleString() }),
         setNHoles: (nHoles) => set({ nHoles }),
         setPlayers: (players) => set({ players }),
 
@@ -37,15 +35,15 @@ const useGameStore = create( persist(
             { name: pName1, scores: Array(nHoles).fill(null) },
             { name: pName2, scores: Array(nHoles).fill(null) },
             ],
-            currentDate: new Date().toLocaleString([], { 
-            year: 'numeric', 
-            month: '2-digit', 
-            day: '2-digit', 
-            hour: '2-digit', 
-            minute: '2-digit',
-            hour12: false, // Set to true for AM/PM format
+            currentDateString: new Date().toLocaleString([], { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit', 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false, // Set to true for AM/PM format
             }),
-            currentTime: new Date().getTime(),
+            currentDate: new Date(),
         }),
 
         // === COURSE MANAGEMENT ===

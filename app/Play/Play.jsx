@@ -3,17 +3,21 @@ import { Text, View, Pressable, Image, TextInput, BackHandler} from "react-nativ
 import { router, useFocusEffect } from "expo-router";
 import useGameStore from "../gameStore";
 import styles, { getInputCellStyle, getUpDownCellStyle, getResultBackgroundColor} from "./Play.styles";
+import StrokeMod from "../components/StrokeMod";
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 export default function Play() {
-    const { nHoles, setNHoles, players, setPlayers, currentCourse, courses, currentDate, currentTime, saveMatch } = useGameStore();
+    const { nHoles, setNHoles, players, setPlayers, currentCourse, courses, currentDateString, currentDate, saveMatch } = useGameStore();
     const [gameCourse, setGameCourse] = useState(courses.find(c => c.courseName === currentCourse));
     //setNHoles(gameCourse.holePars.length);
     const [upAndDownInd, setUpAndDownInd] = useState(Array(gameCourse.holePars.length).fill(null));
     const [upAndDownAdd, setUpAndDownAdd] = useState(Array(gameCourse.holePars.length).fill(null));
 
     const [saveBool, setSaveBool] = useState(false);
+
+    const [strokeMod, setStrokeMod] = useState(false);
+    const [holeClicked, setHoleClicked] = useState(null);
 
     useEffect(() => {
         onEntry();
@@ -139,7 +143,7 @@ return (
         </Pressable>
         <View style={{flex: 1, justifyContent: "center"}}>
             <Text>{currentCourse} - Round</Text>
-            <Text style={{color: "grey", fontSize: 10}}>{currentDate}</Text>
+            <Text style={{color: "grey", fontSize: 10}}>{currentDateString}</Text>
         </View>
         <Text style={styles.title}>GOLF MATCH PLAY</Text>
         <View style={{flex: 1, flexDirection: "row", gap: 10, justifyContent: "flex-end"}}>
@@ -149,7 +153,7 @@ return (
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.par}}>Par</Text> 
             <Text style={{textAlignVertical: "center", fontWeight: "bold", color: COLORS.bogey}}>Bogey</Text>
         </View>
-        <Pressable onPress={()=>{ setSaveBool(true), saveMatch(currentCourse,players,upAndDownTotal(),gameCourse.holePars,currentTime)}}
+        <Pressable onPress={()=>{ setSaveBool(true), saveMatch(currentCourse,players,upAndDownTotal(),gameCourse.holePars,currentDate)}}
             style={({ pressed }) => [ styles.imagePressable,
             { transform: [{ scale: pressed ? 0.9 : 1 }], opacity: pressed ? 0.7 : 1,},]}>
             <Image source={require("../../assets/i_Save.png")} 
@@ -193,18 +197,24 @@ return (
                 {player.scores.map((score, holeIndex) => {
                     if (holeIndex >= nHoles) return null; // Skip if holeIndex is outside nHoles
                     return (
-                        <TextInput
-                            key={holeIndex}
-                            style={[styles.inputCell, styles.cells, getInputCellStyle(score, gameCourse.holePars[holeIndex]) ]}
-                            keyboardType="numeric"
-                            value={score ? score.toString() : ""}
-                            maxLength={2}
-                            onChangeText={(value) =>
-                                handleScoreChange(pIndx, holeIndex, parseInt(value, 10))
-                            }
-                            onFocus={() => handleScoreChange(pIndx, holeIndex, null)}
-                        
-                        />
+                        <Pressable style={{flex: 1}} key={holeIndex} onPress={() => {setHoleClicked(holeIndex), setStrokeMod(true)}}>
+                            <Text style={[styles.inputCell, styles.cells, getInputCellStyle(score, gameCourse.holePars[holeIndex]) ]}>
+                                {score === null ? "" : score.toString()}
+                            </Text>
+                        </Pressable>
+                        ///////////<Text/>
+                        //  <TextInput
+                        //      key={holeIndex}
+                        //      style={[styles.inputCell, styles.cells, getInputCellStyle(score, gameCourse.holePars[holeIndex]) ]}
+                        //      keyboardType="numeric"
+                        //      value={score ? score.toString() : ""}
+                        //      maxLength={2}
+                        //      onChangeText={(value) =>
+                        //          handleScoreChange(pIndx, holeIndex, parseInt(value, 10))
+                        //      }
+                        //      onFocus={() => handleScoreChange(pIndx, holeIndex, null)}
+                    
+                        //  />
                     );
                 })}
                 <Text style={[styles.total, styles.playerTotal]}>{calculateTotal(player.scores)}</Text>
@@ -235,7 +245,7 @@ return (
             : "EVEN")
         : `${players[upAndDownTotal() > 0 ? 0 : 1].name} WINS ${resultToText(upAndDownTotal())}`}
 </Text>
-    
+    {strokeMod && <StrokeMod holeClicked={holeClicked} />}
 </View>
 );
 }

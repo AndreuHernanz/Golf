@@ -93,14 +93,13 @@ return (
 					{players.map((player, index) => (
 						<TextInput
 							key={index}
-							style={[styles.playerInput, { backgroundColor: index % 2 === 0 ? "blue" : "red" }]}
+							style={[styles.playerInput, { backgroundColor: index % 2 === 0 ? "blue" : "red" }]}	
 							value={player.name}
 							onChangeText={(text) => {
 								const newPlayers = [...players];
 								newPlayers[index].name = text;
 								setPlayers(newPlayers);
-							}}
-						/>
+						}}/>
 					))}
 				</View>
 			</View>
