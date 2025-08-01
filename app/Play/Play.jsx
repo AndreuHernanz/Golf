@@ -38,6 +38,10 @@ export default function Play() {
 		}, [])
 	);
 
+    useEffect(() => {
+        handleMatchPlay(players);
+    }, [strokeMod]);
+
     const onEntry = async () => {
         await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     };
@@ -49,7 +53,6 @@ export default function Play() {
     const handleMatchPlay = (newPlayers) => {
         //console.log("handleMatchPlay", newPlayers, newNHoles);
         let individualUpAndDown = [];
-        //const newupAndDown = [...upAndDownAdd];
         let newupAndDown = Array(gameCourse.holePars.length).fill(null);
 
         let count = 0;
@@ -114,25 +117,7 @@ return (
 <View style={styles.container}>
 
     {/* BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS BUTTONS */}
-    
 
-    {/* <View style={styles.nHolesButs}>
-        <Pressable onPress={() => { setNHoles(9), handleMatchPlay(players, 9); }}
-            style={({ pressed }) => [
-                {transform: [{ scale: pressed ? 0.9 : 1 }],
-                opacity: pressed ? 0.7 : 1,},
-            ]}
-        >
-            <Text style={styles.nHolesButsText}>9 Holes</Text>
-        </Pressable>
-        <Pressable onPress={() => { setNHoles(18), handleMatchPlay(players, 18) }} 
-            style={({ pressed }) => [{
-                transform: [{ scale: pressed ? 0.9 : 1 }],
-                opacity: pressed ? 0.7 : 1,},
-            ]}>
-            <Text style={styles.nHolesButsText}>18 Holes</Text>
-        </Pressable>
-    </View> */}
     
     
     <View style={{ flexDirection: "row", justifyContent: "space-between", maxHeight: 60, }}>
@@ -245,7 +230,7 @@ return (
             : "EVEN")
         : `${players[upAndDownTotal() > 0 ? 0 : 1].name} WINS ${resultToText(upAndDownTotal())}`}
 </Text>
-    {strokeMod && <StrokeMod holeClicked={holeClicked} />}
+    {strokeMod && <StrokeMod holeClicked={holeClicked} setStrokeMod={setStrokeMod} />}
 </View>
 );
 }

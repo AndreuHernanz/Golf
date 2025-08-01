@@ -57,10 +57,10 @@ const useGameStore = create( persist(
       
 
         // === MATCH HISTORY ===
-        saveMatch: ( course, players, matchPlayResult, holePars, time) => {
+        saveMatch: ( course, players, matchPlayResult, holePars, date) => {
             // MATCH PLAY RESULT will go for example from -5 to 0 to +5 (5DOWN in red or EVEN or 5UP in blue)
             //const date = new Date().toLocaleString();
-            console.log("Saving match:", { course, players, matchPlayResult, holePars, time });
+            console.log("Saving match:", { course, players, matchPlayResult, holePars, date });
             const nHoles = players[0].scores.length;  // Assuming both players have the same number of holes
         
 
@@ -82,14 +82,14 @@ const useGameStore = create( persist(
                 nHoles,
                 holePars,
                 players,
-                time,
+                date,
                 matchPlayResult,
                 result,
                 strokesDifference,
             };
         
             set((state) => {
-                const existingIndex = state.matchHistory.findIndex(m => m.time === time);
+                const existingIndex = state.matchHistory.findIndex(m => m.date === date);
             
                 let newHistory;
                 if (existingIndex !== -1) {

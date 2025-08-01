@@ -13,12 +13,14 @@ export default function History() {
     const formatTimestamp = (timestamp) => {
         if (!timestamp) return '';
 
-        if (typeof timestamp != Date) return '';
-    
-        const day = timestamp.getDate();
-        const month = timestamp.toLocaleString('default', { month: 'short' }); // e.g. "Apr"
-    
-        return `${day} ${month}`;
+    const date = new Date(timestamp);
+
+    if (isNaN(date.getTime())) return ''; // Invalid date
+
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'short' }); // e.g. "Jul"
+
+    return `${day} ${month}`;
     };
   
 
@@ -76,10 +78,6 @@ return (
         renderItem={renderItem}
         contentContainerStyle={styles.list}
     />
-
-
-
-
 
     </View>
     <NavBar page="History" />

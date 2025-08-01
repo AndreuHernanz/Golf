@@ -4,7 +4,7 @@ import useGameStore from "../gameStore";
 import { COLORS, BORDER_RADIUS, FONT_SIZES } from "../consts";
 
 
-export default function StrokeMod({holeClicked}) {
+export default function StrokeMod({holeClicked, setStrokeMod}) {
 
     const {players, currentCourse, courses} = useGameStore();
 
@@ -13,6 +13,18 @@ export default function StrokeMod({holeClicked}) {
     const [holeStrokeP2, setHoleStrokeP2] = useState(players[1].scores[holeClicked] ? players[1].scores[holeClicked] : 
         courses.find(c => c.courseName === currentCourse).holePars[holeClicked]);
 
+    const setHoleResult = () => {
+        players[0].scores[holeClicked] = holeStrokeP1;
+        players[1].scores[holeClicked] = holeStrokeP2;
+    }
+
+    const setStrokePlayer = (player, increment) => {
+        if (player === 0) {
+            setHoleStrokeP1(holeStrokeP1 + increment > 1 ? holeStrokeP1 + increment : 1);
+        } else {
+            setHoleStrokeP2(holeStrokeP2 + increment > 1 ? holeStrokeP2 + increment : 1);
+        }
+    }
 
 return (
 <View style={styles.container}>
@@ -20,34 +32,38 @@ return (
     <View style={{ flexDirection: "row", justifyContent: "space-between"}}>
         <View style={{gap: 10}}>
             <View style={{flexDirection: "row", gap: 10, alignItems: "center"}}>
-                <Text style={{fontSize: FONT_SIZES.large, fontWeight: "bold", color: "white",
+                <Text style={{fontSize: FONT_SIZES.title, fontWeight: "bold", color: "white",
                     maxWidth: 150, minWidth: 150, textAlign: "right", }}>{players[0].name}:     </Text>
-                <Pressable style={styles.box}>
+                <Pressable style={styles.box} onPress={() => setStrokePlayer(0, -1)}>
                     <Text style={styles.textInput}> - </Text>
                 </Pressable>	
                 <View style={styles.box}>
                     <Text style={styles.textInput}> {holeStrokeP1} </Text>
                 </View>	
-                <Pressable style={styles.box}>
+                <Pressable style={styles.box} onPress={() => setStrokePlayer(0, 1)}>
                     <Text style={styles.textInput}> + </Text>
                 </Pressable>		 
             </View>
             <View style={{flexDirection: "row", gap: 10, alignItems: "center"}}>
-                <Text style={{fontSize: FONT_SIZES.large, fontWeight: "bold", color: "white",
+                <Text style={{fontSize: FONT_SIZES.title, fontWeight: "bold", color: "white",
                     maxWidth: 150, minWidth: 150, textAlign: "right", }}>{players[1].name}:     </Text>
-                <Pressable style={styles.box}>
+                <Pressable style={styles.box} onPress={() => setStrokePlayer(1, -1)}>
                     <Text style={styles.textInput}> - </Text>
                 </Pressable>	
                 <View style={styles.box}>
                     <Text style={styles.textInput}> {holeStrokeP2} </Text>
                 </View>	
-                <Pressable style={styles.box}>
+                <Pressable style={styles.box} onPress={() => setStrokePlayer(1, 1)}>
                     <Text style={styles.textInput}> + </Text>
                 </Pressable>
             </View>
         </View>
         <View style={{flexDirection: "row", alignItems: "center"}}>
-            <Pressable style={[styles.box,{backgroundColor: COLORS.terciary, maxWidth: 150, minWidth: 150}]}><Text style={styles.textInput}>OK</Text></Pressable>
+            <Pressable style={({ pressed }) => [styles.box, {backgroundColor: COLORS.terciary, maxWidth: 150, minWidth: 150}, 
+                pressed && styles.butPressed]} 
+                onPress={() => {setHoleResult(), setStrokeMod(false)}}>
+                <Text style={styles.textInput}>OK</Text>
+            </Pressable>
         </View>
     </View>
 </View>
@@ -80,7 +96,7 @@ const styles = StyleSheet.create({
         position: "absolute", 
         top: 0, left: 0, 
         width: "100%", height: "100%", 
-        backgroundColor: "#005C53CC",//"rgba(18, 54, 0, 0.79)",
+        backgroundColor: "#005C53E0",//"rgba(18, 54, 0, 0.79)",
         zIndex: 200,
         gap: 10,
         justifyContent: "center",
@@ -91,7 +107,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background, 
         borderRadius: 50, 
         padding: 20,
-        fontSize: FONT_SIZES.large,
     },
     title:{
         fontSize: 20, 
@@ -101,7 +116,7 @@ const styles = StyleSheet.create({
         color: "white",
     },
     textInput: {
-        fontSize: FONT_SIZES.large,
+        fontSize: FONT_SIZES.title + 10,
         borderRadius: 50, 
         padding: 5,
         textAlign: "center",

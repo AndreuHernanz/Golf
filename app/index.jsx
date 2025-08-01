@@ -6,3 +6,6 @@ export default function index() {
   );
 }
 
+// APK build command
+// eas build --platform android --profile preview
+
