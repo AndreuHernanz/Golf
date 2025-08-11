@@ -26,17 +26,19 @@ export default function Play() {
     }, []);
 
     useFocusEffect(
-		useCallback(() => {
-			const onBackPress = () => {
-				onLeave();
-				return false; 
-			};
+        useCallback(() => {
+            const onBackPress = () => {
+                onLeave();
+                return false;
+            };
 
-			BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-			return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-		}, [])
-	);
+            return () => {
+                subscription.remove(); // ✅ correct cleanup
+            };
+        }, [])
+    );
 
     useEffect(() => {
         handleMatchPlay(players);
