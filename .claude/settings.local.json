@@ -5,7 +5,17 @@
       "Bash(npm start)",
       "Bash(del:*)",
       "Bash(taskkill:*)",
-      "Bash(npx expo:*)"
+      "Bash(npx expo:*)",
+      "Bash(eas whoami:*)",
+      "Bash(eas build:*)",
+      "WebFetch(domain:expo.dev)",
+      "Bash(eas build:view:*)",
+      "Bash(eas build:log:*)",
+      "Bash(yarn install)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(eas:*)"
     ]
   }
 }
