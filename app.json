@@ -8,11 +8,12 @@
     ],
     "name": "Golf Match Play",
     "slug": "GolfMatchPlay",
+    "icon": "./assets/ic_launcher_foreground_432.png",
     "android": {
       "package": "com.anonymous.GolfMatchPlay",
       "adaptiveIcon": {
         "foregroundImage": "./assets/ic_launcher_foreground_432.png",
-        "backgroundColor": "#0000ff"
+        "backgroundImage": "./assets/ic_launcher_background_432.png"
       },
       "newArchEnabled": true
     },
