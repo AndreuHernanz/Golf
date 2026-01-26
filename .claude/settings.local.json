@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir:*)",
+      "Bash(npm start)",
+      "Bash(del:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx expo:*)"
+    ]
+  }
+}
